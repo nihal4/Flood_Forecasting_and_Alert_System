@@ -46,7 +46,7 @@ int main(){
             clear_screen();
             printf("program closed!!");
             exit(0);
-            //break;
+            break;
         default:
             sleep(1);
             clear_screen();
