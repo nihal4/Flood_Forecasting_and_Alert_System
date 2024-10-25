@@ -1,5 +1,4 @@
 #include <stdio.h>
-<<<<<<< HEAD
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -55,10 +54,4 @@ int main(){
             break;
         }
     }
-    
-=======
-int main{
-printf("Hello Everyone!");
-return 0;
->>>>>>> f25c89ffb6a4126a710bdc620072b17e787da4ea
 }
