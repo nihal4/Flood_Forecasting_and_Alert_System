@@ -1,4 +1,2 @@
-dhaka 9.00 32.00 6.87 OFF
-Dhaka 23.00 41.00 11.84 OFF
-rajshahi 32.00 40.00 14.98 OFF
-khulna 6.00 30.00 5.81 OFF
+dhaka 3.00 27.00 4.74 OFF
+rajshahi 8.00 90.00 6.93 OFF

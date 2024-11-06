@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 #define ALPHA 0.5   // Example constant for rainfall coefficient
 #define BETA  0.01   // Example constant for temperature coefficient
 #define GAMMA 5   // Example constant for base water level
@@ -19,6 +20,10 @@ void clearScreen() {
     #endif
 }
 
+// Function for case-insensitive comparison of strings
+int compareLocations(const char *location1, const char *location2) {
+    return strcasecmp(location1, location2);  // Case-insensitive comparison
+}
 
 //part of noor
 // Structure to hold environmental data
@@ -71,8 +76,9 @@ int loadDataFromFile(EnvironmentalData *data)
     return count; // Return the number of entries loaded
 }
 
+
 // Modified inputData function with location existence check
-// Modified inputData function with location existence check
+// Function to input data and append to the file
 void inputData(EnvironmentalData *data, int *count)
 {
     char newLocation[50];
@@ -92,10 +98,10 @@ void inputData(EnvironmentalData *data, int *count)
     printf("Enter location: ");
     scanf("%s", newLocation);
 
-    // Check if location already exists in the loaded data
+    // Check if location already exists in the loaded data (case-insensitive)
     for (int i = 0; i < existingCount; i++)
     {
-        if (strcmp(existingData[i].location, newLocation) == 0)
+        if (compareLocations(existingData[i].location, newLocation) == 0)
         {
             printf("Location '%s' already exists.\n", newLocation);
             locationExists = 1;
@@ -129,7 +135,51 @@ void inputData(EnvironmentalData *data, int *count)
     }
 }
 
+//update data
+// Function for updating existing environmental data
+void updateData(EnvironmentalData *data, int count) {
+    char locationToEdit[50];
+    int foundIndex = -1;
 
+    // Prompt user to input the location they want to update
+    printf("Enter the location name to update: ");
+    scanf("%s", locationToEdit);
+
+    // Search for the location in the data
+    for (int i = 0; i < count; i++) {
+        if (compareLocations(data[i].location, locationToEdit) == 0) {
+            foundIndex = i;  // Location found, store the index
+            break;
+        }
+    }
+
+    if (foundIndex != -1) {
+        // Update the existing data for the found location
+        printf("Updating data for %s...\n", data[foundIndex].location);
+        printf("Enter new rainfall (in mm): ");
+        scanf("%f", &data[foundIndex].rainfall);
+        printf("Enter new temperature (in degrees Celsius): ");
+        scanf("%f", &data[foundIndex].temperature);
+        printf("Data updated successfully for %s.\n", data[foundIndex].location);
+
+        // Open the file for writing (this will overwrite the existing file)
+        FILE *file = fopen("data.txt", "w");
+        if (file == NULL) {
+            printf("Error opening file for writing.\n");
+            return;
+        }
+
+        // Write all data back to the file after updating
+        for (int i = 0; i < count; i++) {
+            fprintf(file, "%s %.2f %.2f\n", data[i].location, data[i].rainfall, data[i].temperature);
+        }
+
+        fclose(file);
+        printf("Data saved successfully to the file.\n");
+    } else {
+        printf("Location '%s' not found in the data.\n", locationToEdit);
+    }
+}
 
 
 
@@ -224,7 +274,8 @@ int main() {
         printf("1. Input environmental data\n");
         printf("2. Update predictions and alerts\n");
         printf("3. View alert status\n");
-        printf("4. Exit\n");
+        printf("4. Update existing environmental data\n");
+        printf("5. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -243,19 +294,23 @@ int main() {
                 view_alert(prediction_file);  // Display the alert table
                 break;
             case 4:
+                clearScreen();
+                updateData(data, count);  // Update existing environmental data
+                break;
+            case 5:
                 printf("Exiting the system.\n");
                 break;
             default:
                 printf("Invalid choice. Please try again.\n");
         }
 
-        if (choice != 4) {
+        if (choice != 5) {
             printf("\nPress Enter to continue...");
             getchar();  // Consume the newline character from previous input
             getchar();  // Wait for user to press Enter before clearing
         }
 
-    } while (choice != 4);
+    } while (choice != 5);
 
     return 0;
 }
