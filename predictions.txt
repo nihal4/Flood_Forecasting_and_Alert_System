@@ -4,5 +4,6 @@ sirajgonj 8.00 30.00 6.51 OFF
 rongpur 3.00 41.00 4.84 OFF
 gajipur 12.00 13.00 7.79 OFF
 khulna 8.00 8.00 6.36 OFF
-k 8.00 8.00 6.36 OFF
+k 99.00 21.00 38.30 ON
 joshor 3.00 4.00 4.58 OFF
+pune 50.00 31.00 21.22 ON

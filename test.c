@@ -124,7 +124,7 @@ int loadDataFromFile(EnvironmentalData *data)
     return count; // Return the number of entries loaded
 }
 
-//EnvironmentalData existingData[MAX_DATA_ENTRIES];
+// EnvironmentalData existingData[MAX_DATA_ENTRIES];
 
 // Modified inputData function with location existence check
 // Function to input data and append to the file
@@ -189,7 +189,7 @@ void inputData(EnvironmentalData *data, int *count)
 //  Function for updating existing environmental data
 void updateData(EnvironmentalData *data, int count)
 {
-    //char locationToEdit[50];
+    // char locationToEdit[50];
     int foundIndex = -1;
 
     char newLocation[50];
@@ -214,7 +214,7 @@ void updateData(EnvironmentalData *data, int count)
     {
         if (compareLocations(existingData[i].location, newLocation) == 0)
         {
-            //printf("Location '%s' already exists.\n", newLocation);
+            // printf("Location '%s' already exists.\n", newLocation);
             foundIndex = i;
             break;
         }
@@ -452,7 +452,8 @@ void adminMenu()
     int choice;
 
     do
-    {
+    {   
+        clearScreen();
         printf("\nAdmin Menu:\n");
         printf("1. Input environmental data\n");
         printf("2. Update predictions and alerts\n");
@@ -588,11 +589,12 @@ void showForecast(const char *location)
     {
         if (strcasecmp(data.location, location) == 0)
         { // Case-insensitive comparison
+            clearScreen();
             found = 1;
             printf("Forecast for location: %s\n", data.location);
             printf("Temperature: %.2f°C\n", data.temperature);
             printf("Rainfall: %.2f mm\n", data.rainfall);
-            printf("Water Level: %f\n", data.waterLevel);
+            printf("Water Level: %.2f m\n", data.waterLevel);
             printf("Alert: %s\n", data.alertStatus);
             break;
         }
@@ -619,8 +621,9 @@ void userMenu()
 {
     int choice;
 
-    while (1)
-    {
+    do
+    {   
+        clearScreen();
         printf("\nUser Menu:\n");
         printf("1. Show forecast for my location\n");
         printf("2. Search for forecast in other location\n");
@@ -628,6 +631,7 @@ void userMenu()
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
+        
         switch (choice)
         {
         case 1:
@@ -639,64 +643,85 @@ void userMenu()
             searchOtherLocation();
             break;
         case 3:
-            return; // Logout and return to login page
+            return;
         default:
-            printf("Invalid choice.\n");
+            printf("Invalid choice. Please try again.\n");
         }
-    }
+
+        if (choice != 3)
+        {
+            printf("\nPress Enter to continue...");
+            getchar(); // Consume the newline character from previous input
+            getchar(); // Wait for user to press Enter before clearing
+        }
+    } while (choice != 3);
 }
 
 void loginPage()
 {
     int choice;
 
-    printf("Welcome to the Login System!\n");
-    printf("1. Admin Login\n");
-    printf("2. User Login\n");
-    printf("3. Register as Admin\n");
-    printf("4. Register as User\n");
-    printf("Enter your choice: ");
-    scanf("%d", &choice);
+   
+    do
+    {   
+        clearScreen();
+        printf("Welcome to the Login System!\n");
+        printf("1. Admin Login\n");
+        printf("2. User Login\n");
+        printf("3. Register as Admin\n");
+        printf("4. Register as User\n");
+        printf("5. Exit program\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    clearScreen();
-    switch (choice)
-    {
-    case 1:
-        clearScreen();
-        if (authenticateAdmin())
+        
+        switch (choice)
         {
+        case 1:
             clearScreen();
-            adminMenu();
-        }
-        else
-        {
-            printf("Invalid admin credentials.\n");
-        }
-        break;
-    case 2:
-        clearScreen();
-        if (authenticateUser())
-        {
+            if (authenticateAdmin())
+            {
+                //clearScreen();
+                adminMenu();
+            }
+            else
+            {
+                printf("Invalid admin credentials.\n");
+            }
+            break;
+        case 2:
             clearScreen();
-            userMenu();
+            if (authenticateUser())
+            {
+                clearScreen();
+                userMenu();
+            }
+            else
+            {
+                printf("Invalid user credentials.\n");
+            }
+            break;
+        case 3:
+            clearScreen();
+            registerAdmin();
+            break;
+        case 4:
+            clearScreen();
+            registerUser();
+            break;
+        case 5:
+            exit(0);
+        default:
+            printf("Invalid choice. Please try again.\n");
         }
-        else
+
+        if (choice != 5)
         {
-            printf("Invalid user credentials.\n");
+            printf("\nPress Enter to continue...");
+            getchar(); // Consume the newline character from previous input
+            getchar(); // Wait for user to press Enter before clearing
         }
-        break;
-    case 3:
-        clearScreen();
-        registerAdmin();
-        break;
-    case 4:
-        clearScreen();
-        registerUser();
-        break;
-    default:
-        printf("Invalid choice.\n");
-        break;
-    }
+    } while (choice != 5);
 }
 
 int main()

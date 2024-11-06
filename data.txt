@@ -4,5 +4,6 @@ sirajgonj 8.00 30.00
 rongpur 3.00 41.00
 gajipur 12.00 13.00
 khulna 8.00 8.00
-k 8.00 8.00
+k 99.00 21.00
 joshor 3.00 4.00
+pune 50.00 31.00
