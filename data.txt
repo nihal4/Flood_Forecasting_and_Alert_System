@@ -1,2 +1,5 @@
 dhaka 3.00 27.00
 rajshahi 8.00 90.00
+sirajgonj 8.00 30.00
+rongpur 3.00 41.00
+gajipur 12.00 13.00
