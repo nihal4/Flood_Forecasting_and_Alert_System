@@ -1,2 +1,4 @@
-Dhaka 56.00 35.00 23.34 ON
-Ranguper 26.00 27.00 12.79 OFF
+dhaka 9.00 32.00 6.87 OFF
+Dhaka 23.00 41.00 11.84 OFF
+rajshahi 32.00 40.00 14.98 OFF
+khulna 6.00 30.00 5.81 OFF

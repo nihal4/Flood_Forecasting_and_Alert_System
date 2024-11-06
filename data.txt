@@ -1,3 +1,4 @@
-Dhaka 56.00 35.00
-Ranguper 26.00 27.00
-
+dhaka 9.00 32.00
+Dhaka 23.00 41.00
+rajshahi 32.00 40.00
+khulna 6.00 30.00
