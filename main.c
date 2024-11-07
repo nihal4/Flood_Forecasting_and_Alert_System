@@ -2,21 +2,51 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ALPHA 0.5                // Example constant for rainfall coefficient
-#define BETA 0.01                // Example constant for temperature coefficient
-#define GAMMA 5                  // Example constant for base water level
-#define THRESHOLD_WATER_LEVEL 19 // Example threshold for flood alert
+#define ALPHA 0.5
+/*
+This represents the sensitivity of water levels to rainfall.
+In Bangladesh, heavy monsoon rains can rapidly raise river levels.
+An approximate value might range between 0.5 to 1.5 meters per mm of rainfall,
+depending on the location and catchment area.
+*/
+#define BETA 0.01
+/*
+While temperature directly affects evaporation rates,
+it may not have as large an effect on immediate water levels in rivers,
+but it does affect reservoir levels over time. For Bangladesh,
+a small coefficient might be reasonable, such as 0.01 to 0.05 meters per degree Celsius.
+*/
+
+#define GAMMA 5
+/*
+This constant can represent an average base level of water in the river
+or reservoir when rainfall and temperature effects are minimal.
+In Bangladesh, baseline levels vary by river and season,
+but for the monsoon season, a typical baseline could range from 5 to 10 meters
+*/
+#define THRESHOLD_WATER_LEVEL 19
+/*
+The Danger Level is defined as 19.05 meters,
+indicating a threshold beyond which the water level may pose risks, such as flooding.
+*/
+
 #define CONVENTION_FACTOR 0.7    // to convert unit to meter
+/*
+If the model outputs a water level in "units" and,
+on average, 1 model unit corresponds to 1.5 meters
+at a particular station on the Brahmaputra, then the conversion
+factor would be 1.5 meters per unit. but we are setting to 0.7 for 
+our easier calculation.
+*/
 
-#define MAX_DATA_ENTRIES 100 // Maximum number of data entries
+#define MAX_DATA_ENTRIES 100 // the maximum number of location data i can enter.
 
-#define MAX_USERS 100
-#define MAX_ADMIN 1 // Only one admin in this case
-#define MAX_NAME_LENGTH 50
-#define MAX_PASSWORD_LENGTH 50
-#define MAX_LOCATION_LENGTH 50
+#define MAX_USERS 100          // value max number of user name for admin and user
+#define MAX_NAME_LENGTH 50     // maximum size for name for admin and user
+#define MAX_PASSWORD_LENGTH 50 // maximum password size;
+#define MAX_LOCATION_LENGTH 50 // maximum location name size;
 
-// Structs to store login data
+// strcutre for 
 typedef struct
 {
     char username[MAX_NAME_LENGTH];
@@ -39,7 +69,7 @@ User users[MAX_USERS];
 int userCount = 0;
 
 // for forcast
-#define MAX_LOCATION_LENGTH 50
+//#define MAX_LOCATION_LENGTH 50
 // #define MAX_DATA_ENTRIES 100
 
 // Structure to hold forecast data
@@ -124,7 +154,7 @@ int loadDataFromFile(EnvironmentalData *data)
     return count; // Return the number of entries loaded
 }
 
-//EnvironmentalData existingData[MAX_DATA_ENTRIES];
+// EnvironmentalData existingData[MAX_DATA_ENTRIES];
 
 // Modified inputData function with location existence check
 // Function to input data and append to the file
@@ -189,7 +219,7 @@ void inputData(EnvironmentalData *data, int *count)
 //  Function for updating existing environmental data
 void updateData(EnvironmentalData *data, int count)
 {
-    //char locationToEdit[50];
+    // char locationToEdit[50];
     int foundIndex = -1;
 
     char newLocation[50];
@@ -214,7 +244,7 @@ void updateData(EnvironmentalData *data, int count)
     {
         if (compareLocations(existingData[i].location, newLocation) == 0)
         {
-            //printf("Location '%s' already exists.\n", newLocation);
+            // printf("Location '%s' already exists.\n", newLocation);
             foundIndex = i;
             break;
         }
@@ -453,6 +483,7 @@ void adminMenu()
 
     do
     {
+        clearScreen();
         printf("\nAdmin Menu:\n");
         printf("1. Input environmental data\n");
         printf("2. Update predictions and alerts\n");
@@ -588,11 +619,12 @@ void showForecast(const char *location)
     {
         if (strcasecmp(data.location, location) == 0)
         { // Case-insensitive comparison
+            clearScreen();
             found = 1;
             printf("Forecast for location: %s\n", data.location);
             printf("Temperature: %.2f°C\n", data.temperature);
             printf("Rainfall: %.2f mm\n", data.rainfall);
-            printf("Water Level: %f\n", data.waterLevel);
+            printf("Water Level: %.2f m\n", data.waterLevel);
             printf("Alert: %s\n", data.alertStatus);
             break;
         }
@@ -619,8 +651,9 @@ void userMenu()
 {
     int choice;
 
-    while (1)
+    do
     {
+        clearScreen();
         printf("\nUser Menu:\n");
         printf("1. Show forecast for my location\n");
         printf("2. Search for forecast in other location\n");
@@ -639,64 +672,83 @@ void userMenu()
             searchOtherLocation();
             break;
         case 3:
-            return; // Logout and return to login page
+            return;
         default:
-            printf("Invalid choice.\n");
+            printf("Invalid choice. Please try again.\n");
         }
-    }
+
+        if (choice != 3)
+        {
+            printf("\nPress Enter to continue...");
+            getchar(); // Consume the newline character from previous input
+            getchar(); // Wait for user to press Enter before clearing
+        }
+    } while (choice != 3);
 }
 
 void loginPage()
 {
     int choice;
 
-    printf("Welcome to the Login System!\n");
-    printf("1. Admin Login\n");
-    printf("2. User Login\n");
-    printf("3. Register as Admin\n");
-    printf("4. Register as User\n");
-    printf("Enter your choice: ");
-    scanf("%d", &choice);
-
-    clearScreen();
-    switch (choice)
+    do
     {
-    case 1:
         clearScreen();
-        if (authenticateAdmin())
+        printf("Welcome to the Login System!\n");
+        printf("1. Admin Login\n");
+        printf("2. User Login\n");
+        printf("3. Register as Admin\n");
+        printf("4. Register as User\n");
+        printf("5. Exit program\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
         {
+        case 1:
             clearScreen();
-            adminMenu();
-        }
-        else
-        {
-            printf("Invalid admin credentials.\n");
-        }
-        break;
-    case 2:
-        clearScreen();
-        if (authenticateUser())
-        {
+            if (authenticateAdmin())
+            {
+                // clearScreen();
+                adminMenu();
+            }
+            else
+            {
+                printf("Invalid admin credentials.\n");
+            }
+            break;
+        case 2:
             clearScreen();
-            userMenu();
+            if (authenticateUser())
+            {
+                clearScreen();
+                userMenu();
+            }
+            else
+            {
+                printf("Invalid user credentials.\n");
+            }
+            break;
+        case 3:
+            clearScreen();
+            registerAdmin();
+            break;
+        case 4:
+            clearScreen();
+            registerUser();
+            break;
+        case 5:
+            exit(0);
+        default:
+            printf("Invalid choice. Please try again.\n");
         }
-        else
+
+        if (choice != 5)
         {
-            printf("Invalid user credentials.\n");
+            printf("\nPress Enter to continue...");
+            getchar(); // Consume the newline character from previous input
+            getchar(); // Wait for user to press Enter before clearing
         }
-        break;
-    case 3:
-        clearScreen();
-        registerAdmin();
-        break;
-    case 4:
-        clearScreen();
-        registerUser();
-        break;
-    default:
-        printf("Invalid choice.\n");
-        break;
-    }
+    } while (choice != 5);
 }
 
 int main()
