@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <unistd.h>  // For usleep (or use Sleep on Windows)
 
-void loadingDotsAnimation(int duration)
+void loadingDotsAnimation(int duration, char str[10])
 {
     printf("\033[1;32m");  // Set text color to green (optional for styling)
-    printf("Loading");
+    printf("%s", str);
 
     for (int t = 0; t < duration; t++)  // Duration controls how long the animation runs
     {
@@ -29,7 +29,7 @@ void loadingDotsAnimation(int duration)
 
 int main()
 {
-    loadingDotsAnimation(2);  // Display loading dots animation for 10 cycles
+    loadingDotsAnimation(2, "nihal");  // Display loading dots animation for 10 cycles
     return 0;
 }
 

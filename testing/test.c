@@ -111,8 +111,8 @@ int userCount = 0; // to track number of user created
 EnvironmentalData data[MAX_DATA_ENTRIES];
 int count = 0; // to track number of data entered
 
-const char *input_file = "data.txt";             // File for environmental data
-const char *prediction_file = "predictions.txt"; // File for predictions
+const char *input_file = "data_base/data.txt";             // File for environmental data
+const char *prediction_file = "data_base/predictions.txt"; // File for predictions
 
 ////////////////// END ////////////////////////
 
@@ -143,6 +143,33 @@ int compareLocations(const char *location1, const char *location2)
 {
     return strcasecmp(location1, location2); // Case-insensitive comparison
 }
+
+
+void loadingDotsAnimation(int duration, char str[10])
+{
+    printf("\033[1;32m");  // Set text color to green (optional for styling)
+    printf("%s", str);
+
+    for (int t = 0; t < duration; t++)  // Duration controls how long the animation runs
+    {
+        // Print dots based on the current cycle
+        for (int dot = 1; dot <= 3; dot++)
+        {
+            printf(".");
+            fflush(stdout);  // Force the output to display immediately
+            sleep(1);  // Sleep for 500 milliseconds (0.5 seconds)
+        }
+
+        // Erase the dots by printing backspaces (to reset the line)
+        for (int dot = 1; dot <= 3; dot++)
+        {
+            printf("\b \b");  // Print backspace and a space to clear
+        }
+    }
+
+    printf("\033[0m");  // Reset text color
+    //printf("\nLoading complete!\n");
+}
 ///////////////// END ///////////////////////////
 
 ///////////////////////// 232-35-048/////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,7 +179,7 @@ int compareLocations(const char *location1, const char *location2)
 // Function to save environmental data to a file
 void saveDataToFile(const EnvironmentalData *data, int count)
 {
-    FILE *file = fopen("data.txt", "a"); // Open file in append mode
+    FILE *file = fopen("data_base/data.txt", "a"); // Open file in append mode
     if (file == NULL)
     {
         printf("Error opening file for writing.\n");
@@ -172,13 +199,13 @@ void saveDataToFile(const EnvironmentalData *data, int count)
 // Function to load environmental data from a file
 int loadDataFromFile(EnvironmentalData *data)
 {
-    FILE *file = fopen("data.txt", "r"); // Changed to consistent file name
+    FILE *file = fopen("data_base/data.txt", "r"); // Changed to consistent file name
     
     if (file == NULL)  // If the file doesn't exist
     {
         //printf("File doesn't exist. Creating a new file.\n");
         // Open the file in append mode to create it
-        file = fopen("data.txt", "a");
+        file = fopen("data_base/data.txt", "a");
         if (file == NULL)  // Check if the file was successfully created
         {
             printf("Error creating the file.\n");
@@ -272,16 +299,17 @@ void inputData(EnvironmentalData *data, int *count)
 
         clearScreen();
         printf("\033[1;32m"); // Green for success message
-        printf("\nPlease wait...\n");
+        loadingDotsAnimation(2,"Saving");
+        //printf("\nPlease wait...\n");
         printf("\033[0m"); // Reset color
-        delay(2);
+        //delay(2);
         printf("\033[1;32m"); // Green for success message
-        printf("\nData inputted successfully for %s.\n", data[*count].location);
+        printf("\n\nData Saved Successfully For %s.\n", data[*count].location);
         printf("\033[0m"); // Reset color
         delay(1);
 
         // Append the new data to the file
-        FILE *file = fopen("data.txt", "a");
+        FILE *file = fopen("data_base/data.txt", "a");
         if (file != NULL)
         {
             fprintf(file, "%s %.2f %.2f\n", data[*count].location, data[*count].rainfall, data[*count].temperature);
@@ -325,7 +353,7 @@ void deleteData(EnvironmentalData *data, int *count)
         {
             locationFound = 1;
             printf("\033[1;32m"); // Green for success
-            printf("Data successfully deleted for location: %s\n", locationToDelete);
+            printf("\nData successfully deleted for location: %s\n", locationToDelete);
             printf("\033[0m"); // Reset color
 
             // Shift the remaining entries to "delete" the location
@@ -349,7 +377,7 @@ void deleteData(EnvironmentalData *data, int *count)
     }
 
     // Save the updated data back to the file (overwrite the file)
-    FILE *file = fopen("data.txt", "w"); // Open file in write mode to overwrite
+    FILE *file = fopen("data_base/data.txt", "w"); // Open file in write mode to overwrite
     if (file != NULL)
     {
         for (int i = 0; i < existingCount; i++)
@@ -401,6 +429,8 @@ void updateData(EnvironmentalData *data, int count)
     scanf("%s", newLocation);
     printf("\033[0m");
 
+    clearScreen();
+    loadingDotsAnimation(2, "Searching");
     // Check if location already exists in the loaded data (case-insensitive)
     for (int i = 0; i < existingCount; i++)
     {
@@ -414,8 +444,9 @@ void updateData(EnvironmentalData *data, int count)
     if (foundIndex != -1)
     {
         // Update the existing data for the found location
+        clearScreen();
         printf("\033[1;32m"); // Green for success
-        printf("Updating data for %s...\n", data[foundIndex].location);
+        printf("Updating Data For %s.\n\n", data[foundIndex].location);
         printf("\033[0m"); // Reset color
         printf("\033[1;34m");
         printf("Enter new rainfall (in mm): ");
@@ -429,12 +460,20 @@ void updateData(EnvironmentalData *data, int count)
         printf("\033[1;33m");
         scanf("%f", &data[foundIndex].temperature);
         printf("\033[0m");
+
+        clearScreen();
         printf("\033[1;32m"); // Green for success
-        printf("Data updated successfully for %s.\n", data[foundIndex].location);
+        loadingDotsAnimation(2,"Updating");
+        printf("\033[0m"); // Reset color
+
+        clearScreen();
+
+        printf("\033[1;32m"); // Green for success
+        printf("Data Updated Successfully For %s.\n", data[foundIndex].location);
         printf("\033[0m"); // Reset color
 
         // Open the file for writing (this will overwrite the existing file)
-        FILE *file = fopen("data.txt", "w");
+        FILE *file = fopen("data_base/data.txt", "w");
         if (file == NULL)
         {
             printf("\033[1;31m"); // Red for error
@@ -450,12 +489,13 @@ void updateData(EnvironmentalData *data, int count)
         }
 
         fclose(file);
-        printf("\033[1;32m"); // Green for success
-        printf("Data saved successfully to the file.\n");
-        printf("\033[0m"); // Reset color
+        //printf("\033[1;32m"); // Green for success
+        //printf("Data saved successfully to the file.\n");
+        //printf("\033[0m"); // Reset color
     }
     else
     {
+        clearScreen();
         printf("\033[1;31m"); // Red for error
         printf("Location '%s' not found in the data.\n", newLocation);
         printf("\033[0m"); // Reset color
@@ -468,7 +508,7 @@ void updateData(EnvironmentalData *data, int count)
 
 void showForecast(const char *location)
 {
-    FILE *file = fopen("predictions.txt", "r");
+    FILE *file = fopen("data_base/predictions.txt", "r");
     if (file == NULL)
     {
         printf("\033[1;31m"); // Red for error message
@@ -544,8 +584,10 @@ void searchOtherLocation()
     scanf("%s", location);
     printf("\033[0m");
     
+    clearScreen();
     printf("\033[1;33m"); // Green for searching another location
-    printf("\nSearching for forecast in another location...\n");
+    loadingDotsAnimation(2, "Searching Forcast");
+    //printf("\nSearching for forecast in another location...\n");
     printf("\033[0m");
 
     delay(2);
@@ -685,7 +727,7 @@ void view_alert(const char *prediction_file)
 // login_ UI afrim part
 void loadAdminFromFile()
 {
-    FILE *file = fopen("admins.txt", "r");
+    FILE *file = fopen("data_base/admins.txt", "r");
     if (file != NULL)
     {
         // Read all admins from file
@@ -715,7 +757,7 @@ void loadAdminFromFile()
 
 void loadUsersFromFile()
 {
-    FILE *file = fopen("users.txt", "r");
+    FILE *file = fopen("data_base/users.txt", "r");
     if (file != NULL)
     {
         while (fscanf(file, "%s %s %s", users[userCount].username, users[userCount].password, users[userCount].location) != EOF)
@@ -732,7 +774,7 @@ void loadUsersFromFile()
 // save admin
 void saveAdminToFile()
 {
-    FILE *file = fopen("admins.txt", "a");
+    FILE *file = fopen("data_base/admins.txt", "a");
     if (file != NULL)
     {
         fprintf(file, "%s %s\n", admins[adminCount].adminID, admins[adminCount].password);
@@ -752,7 +794,7 @@ void saveAdminToFile()
 // User part
 void saveUserToFile()
 {
-    FILE *file = fopen("users.txt", "a");
+    FILE *file = fopen("data_base/users.txt", "a");
     if (file != NULL)
     {
         fprintf(file, "%s %s %s\n", users[userCount].username, users[userCount].password, users[userCount].location);
@@ -787,9 +829,11 @@ void registerAdmin(const char *loged_id)
     }
 
     printf("\033[1;32m"); // Green for action
-    printf("Adding new admin...\n");
+    loadingDotsAnimation(2,"Loading");
+    //printf("Adding new admin...\n");
     printf("\033[0m");
     
+    clearScreen();
     // UI Styling for admin registration
     printf("\033[1;34m"); // Blue color for the registration title
     printf("*********************************\n");
@@ -829,8 +873,17 @@ void registerAdmin(const char *loged_id)
     saveAdminToFile();
     adminCount++;
 
+
+    clearScreen();
+
     printf("\033[1;32m"); // Green for success message
-    printf("Admin registered successfully!\n");
+    loadingDotsAnimation(1,"Registering");
+    printf("\033[0m"); // Reset color
+
+    clearScreen();
+
+    printf("\033[1;32m"); // Green for success message
+    printf("Registered successfully!\n");
     printf("\033[0m"); // Reset color
 }
 
@@ -880,14 +933,15 @@ void registerUser()
     userCount++;
 
     clearScreen();
-    printf("\033[1;34m");
-    printf("Please wait...\n\n");
-    printf("\033[0m");
-
-    delay(2);
 
     printf("\033[1;32m"); // Green for success message
-    printf("User registered successfully!\n");
+    loadingDotsAnimation(1,"Registering");
+    printf("\033[0m"); // Reset color
+
+    clearScreen();
+
+    printf("\033[1;32m"); // Green for success message
+    printf("Registered successfully!\n");
     printf("\033[0m"); // Reset color
 }
 
@@ -1016,7 +1070,7 @@ void adminMenu()
         case 1:
             clearScreen();
             printf("\033[1;32m"); // Green for action
-            printf("Inputting environmental data...\n");
+            printf("Inputting Environmental Data\n");
             printf("\033[0m");
             inputData(data, &count); // Take environmental data as input
             update_predictions(input_file, prediction_file); //new
@@ -1034,14 +1088,16 @@ void adminMenu()
         case 2:
             clearScreen();
             printf("\033[1;32m"); // Green for action
-            printf("Viewing alert status...\n");
+            loadingDotsAnimation(1,"Loading Data");
+            //printf("Viewing alert status...\n");
             printf("\033[0m");
+            clearScreen();
             view_alert(prediction_file); // Display the alert table
             break;
         case 3:
             clearScreen();
             printf("\033[1;32m"); // Green for action
-            printf("Updating existing environmental data...\n");
+            printf("Updating Existing Environmental Data...\n\n");
             printf("\033[0m");
             updateData(data, count); // Update existing environmental data
             update_predictions(input_file, prediction_file); //new
@@ -1049,7 +1105,7 @@ void adminMenu()
         case 4:
             clearScreen();
             printf("\033[1;32m"); // Green for action
-            printf("Deleting environmental data...\n");
+            printf("Deleting Environmental Eata\n\n");
             printf("\033[0m");
             deleteData(data, &count); // Call the deleteData function to remove data based on location
             update_predictions(input_file, prediction_file); //new
@@ -1064,7 +1120,8 @@ void adminMenu()
         case 6:
             clearScreen();
             printf("\033[1;33m"); // Yellow for logging out
-            printf("Logging out...\n");
+            loadingDotsAnimation(1,"Logging Out");
+            //printf("Logging out...\n");
             printf("\033[0m");
             return; // Exit the loop and return to the main menu or authentication
         default:
@@ -1077,7 +1134,7 @@ void adminMenu()
         if (choice != 6)
         {
             printf("\n\033[1;36m"); // Cyan color for continue prompt
-            printf("Press Enter to continue...");
+            printf("Press Enter to continue.");
             getchar();         // Consume the newline character from previous input
             getchar();         // Wait for user to press Enter before clearing
             printf("\033[0m"); // Reset color
@@ -1122,7 +1179,8 @@ void userMenu()
             //printf("\033[0m");
             //printf("%d", userCount);
             printf("\033[1;33m");
-            printf("Displaying forecast for your location...\n");
+            loadingDotsAnimation(2,"Displaying forecast for your location");
+            //printf("Displaying forecast for your location...\n");
             printf("\033[0m");
             delay(1);
             showForecast(users[loggedInUserIndex].location); // Using last registered user for simplicity
@@ -1137,7 +1195,8 @@ void userMenu()
         case 3:
             clearScreen();
             printf("\033[1;33m"); // Yellow for logout message
-            printf("Logging out...\n");
+            loadingDotsAnimation(1, "Logging out");
+            //printf("Logging out...\n");
             printf("\033[0m");
             return; // Exit the menu
         default:
@@ -1150,7 +1209,7 @@ void userMenu()
         if (choice != 3)
         {
             printf("\n\033[1;36m"); // Cyan color for continue prompt
-            printf("Press Enter to continue...");
+            printf("Press Enter to continue.");
             getchar();         // Consume the newline character from previous input
             getchar();         // Wait for user to press Enter before clearing
             printf("\033[0m"); // Reset color
