@@ -290,7 +290,7 @@ void inputData(EnvironmentalData *data, int *count)
         printf("\033[0m");
 
         printf("\033[1;34m"); // Blue for input prompts
-        printf("Enter temperature (in degrees Celsius): ");
+        printf("Enter temperature (in degrees celsius): ");
         printf("\033[0m"); // Reset color
 
         printf("\033[1;33m");
@@ -304,7 +304,7 @@ void inputData(EnvironmentalData *data, int *count)
         printf("\033[0m"); // Reset color
         //delay(2);
         printf("\033[1;32m"); // Green for success message
-        printf("\n\nData Saved Successfully For %s.\n", data[*count].location);
+        printf("\n\nData Saved Successfully for %s.\n", data[*count].location);
         printf("\033[0m"); // Reset color
         delay(1);
 
@@ -446,7 +446,7 @@ void updateData(EnvironmentalData *data, int count)
         // Update the existing data for the found location
         clearScreen();
         printf("\033[1;32m"); // Green for success
-        printf("Updating Data For %s.\n\n", data[foundIndex].location);
+        printf("Updating Data for %s.\n\n", data[foundIndex].location);
         printf("\033[0m"); // Reset color
         printf("\033[1;34m");
         printf("Enter new rainfall (in mm): ");
@@ -455,7 +455,7 @@ void updateData(EnvironmentalData *data, int count)
         scanf("%f", &data[foundIndex].rainfall);
         printf("\033[1;0m");
         printf("\033[1;34m");
-        printf("Enter new temperature (in degrees Celsius): ");
+        printf("Enter new temperature (in degrees celsius): ");
         printf("\033[0m");
         printf("\033[1;33m");
         scanf("%f", &data[foundIndex].temperature);
@@ -469,7 +469,7 @@ void updateData(EnvironmentalData *data, int count)
         clearScreen();
 
         printf("\033[1;32m"); // Green for success
-        printf("Data Updated Successfully For %s.\n", data[foundIndex].location);
+        printf("Data Updated Successfully for %s.\n", data[foundIndex].location);
         printf("\033[0m"); // Reset color
 
         // Open the file for writing (this will overwrite the existing file)
@@ -586,7 +586,7 @@ void searchOtherLocation()
     
     clearScreen();
     printf("\033[1;33m"); // Green for searching another location
-    loadingDotsAnimation(2, "Searching Forcast");
+    loadingDotsAnimation(2, "Searching Forecast");
     //printf("\nSearching for forecast in another location...\n");
     printf("\033[0m");
 
@@ -842,7 +842,7 @@ void registerAdmin(const char *loged_id)
     printf("\033[0m"); // Reset color
 
     printf("\033[1;33m"); // Yellow for input prompts
-    printf("Enter admin ID: ");
+    printf("Enter Admin ID: ");
     scanf("%s", adminID);
 
     
@@ -867,7 +867,7 @@ void registerAdmin(const char *loged_id)
 
     // If admin ID is not taken, proceed with registration
     strcpy(admins[adminCount].adminID, adminID);
-    printf("Enter password: ");
+    printf("Enter Password: ");
     scanf("%s", admins[adminCount].password);
 
     saveAdminToFile();
@@ -883,7 +883,7 @@ void registerAdmin(const char *loged_id)
     clearScreen();
 
     printf("\033[1;32m"); // Green for success message
-    printf("Registered successfully!\n");
+    printf("Registered Successfully!\n");
     printf("\033[0m"); // Reset color
 }
 
@@ -901,7 +901,7 @@ void registerUser()
     printf("\033[0m"); // Reset color
 
     printf("\033[1;33m"); // Yellow for input prompts
-    printf("Enter username: ");
+    printf("Enter Username: ");
     scanf("%s", username);
 
     // Check if the username already exists
@@ -924,9 +924,9 @@ void registerUser()
 
     // If username is not taken, proceed with registration
     strcpy(users[userCount].username, username);
-    printf("Enter password: ");
+    printf("Enter Password: ");
     scanf("%s", users[userCount].password);
-    printf("Enter location: ");
+    printf("Enter Location: ");
     scanf("%s", users[userCount].location);
 
     saveUserToFile();
@@ -961,9 +961,9 @@ int authenticateAdmin()
     printf("\033[0m"); // Reset color
 
     printf("\033[1;33m"); // Yellow color for input prompts
-    printf("Enter admin ID: ");
+    printf("Enter Admin ID: ");
     scanf("%s", adminID);
-    printf("Enter password: ");
+    printf("Enter Password: ");
     scanf("%s", password);
 
     // Iterate through all admins and check for matching ID and password
@@ -1002,9 +1002,9 @@ int authenticateUser()
     printf("\033[0m"); // Reset color
 
     printf("\033[1;33m"); // Yellow color for input prompts
-    printf("Enter username: ");
+    printf("Enter Username: ");
     scanf("%s", username);
-    printf("Enter password: ");
+    printf("Enter Password: ");
     scanf("%s", password);
 
     for (int i = 0; i < userCount; i++)
@@ -1105,7 +1105,7 @@ void adminMenu()
         case 4:
             clearScreen();
             printf("\033[1;32m"); // Green for action
-            printf("Deleting Environmental Eata\n\n");
+            printf("Deleting Environmental Data\n\n");
             printf("\033[0m");
             deleteData(data, &count); // Call the deleteData function to remove data based on location
             update_predictions(input_file, prediction_file); //new
@@ -1134,7 +1134,7 @@ void adminMenu()
         if (choice != 6)
         {
             printf("\n\033[1;36m"); // Cyan color for continue prompt
-            printf("Press Enter to continue.");
+            printf("Press Enter to Continue.");
             getchar();         // Consume the newline character from previous input
             getchar();         // Wait for user to press Enter before clearing
             printf("\033[0m"); // Reset color
@@ -1209,7 +1209,7 @@ void userMenu()
         if (choice != 3)
         {
             printf("\n\033[1;36m"); // Cyan color for continue prompt
-            printf("Press Enter to continue.");
+            printf("Press Enter to Continue.");
             getchar();         // Consume the newline character from previous input
             getchar();         // Wait for user to press Enter before clearing
             printf("\033[0m"); // Reset color

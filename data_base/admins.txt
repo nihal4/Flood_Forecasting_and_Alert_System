@@ -1,4 +1,2 @@
 admin admin
-nihal nihal
-afrim afrim
-noor noor
+
