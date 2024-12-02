@@ -157,7 +157,7 @@ void loadingDotsAnimation(int duration, char str[10])
         {
             printf(".");
             fflush(stdout);  // Force the output to display immediately
-            sleep(1);  // Sleep for 500 milliseconds (0.5 seconds)
+            delay(1);  // Sleep for 500 milliseconds (0.5 seconds)
         }
 
         // Erase the dots by printing backspaces (to reset the line)
