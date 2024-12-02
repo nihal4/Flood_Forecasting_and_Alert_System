@@ -350,7 +350,12 @@ void deleteData(EnvironmentalData *data, int *count)
     for (int i = 0; i < existingCount; i++)
     {
         if (compareLocations(existingData[i].location, locationToDelete) == 0) // Location found
-        {
+        {   
+
+            clearScreen();
+            loadingDotsAnimation(2,"Deleting");
+            clearScreen();
+
             locationFound = 1;
             printf("\033[1;32m"); // Green for success
             printf("\nData successfully deleted for location: %s\n", locationToDelete);
@@ -1105,7 +1110,7 @@ void adminMenu()
         case 4:
             clearScreen();
             printf("\033[1;32m"); // Green for action
-            printf("Deleting Environmental Data\n\n");
+            printf("Delete Environmental Data\n\n");
             printf("\033[0m");
             deleteData(data, &count); // Call the deleteData function to remove data based on location
             update_predictions(input_file, prediction_file); //new
