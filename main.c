@@ -4,7 +4,7 @@
 // #include <termios.h>  // For terminal settings (to hide password input)
 
 #ifdef _WIN32
-#include <windows.h> // For Windows
+#include <windows.h> // For Wind
 #else
 #include <unistd.h> // For macOS and Unix-based systems
 #endif
@@ -68,6 +68,7 @@ typedef struct
     char username[MAX_NAME_LENGTH];
     char password[MAX_PASSWORD_LENGTH];
     char location[MAX_LOCATION_LENGTH];
+    char location_work[MAX_LOCATION_LENGTH];
 } User;
 
 // strcutre to store data for admin register and login
@@ -525,13 +526,13 @@ void showForecast(const char *location)
     ForecastData data;
     int found = 0;
 
-    clearScreen();
+    //clearScreen();
     // Read each line of the file and search for the location
     while (fscanf(file, "%s %f %f %f %s", data.location, &data.rainfall, &data.temperature, &data.waterLevel, data.alertStatus) != EOF)
     {
         if (strcasecmp(data.location, location) == 0)
         { // Case-insensitive comparison
-            clearScreen();
+            //clearScreen();
             found = 1;
 
             
@@ -542,7 +543,7 @@ void showForecast(const char *location)
 
             // Forecast section with green for location name and blue for other details
             printf("\033[1;32m"); // Green for location name
-            printf("Forecast for location: %s\n", data.location);
+            printf("Location: %s\n", data.location);
             printf("\033[1;34m"); // Blue for other data
             printf("Temperature: %.2f°C\n", data.temperature);
             printf("Rainfall: %.2f mm\n", data.rainfall);
@@ -599,6 +600,7 @@ void searchOtherLocation()
 
     // Call showForecast with cyan text color for the output
     printf("\033[1;36m"); // Cyan for the forecast output
+    clearScreen();
     showForecast(location);
     printf("\033[0m"); // Reset color after displaying forecast
 }
@@ -765,7 +767,7 @@ void loadUsersFromFile()
     FILE *file = fopen("data_base/users.txt", "r");
     if (file != NULL)
     {
-        while (fscanf(file, "%s %s %s", users[userCount].username, users[userCount].password, users[userCount].location) != EOF)
+        while (fscanf(file, "%s %s %s %s", users[userCount].username, users[userCount].password, users[userCount].location, users[userCount].location_work) != EOF)
         {
             userCount++;
         }
@@ -802,7 +804,7 @@ void saveUserToFile()
     FILE *file = fopen("data_base/users.txt", "a");
     if (file != NULL)
     {
-        fprintf(file, "%s %s %s\n", users[userCount].username, users[userCount].password, users[userCount].location);
+        fprintf(file, "%s %s %s %s\n", users[userCount].username, users[userCount].password, users[userCount].location, users[userCount].location_work);
         fclose(file);
         //printf("\033[1;32m"); // Green for success message
         //printf("User data saved successfully!\n");
@@ -931,8 +933,10 @@ void registerUser()
     strcpy(users[userCount].username, username);
     printf("Enter Password: ");
     scanf("%s", users[userCount].password);
-    printf("Enter Location: ");
+    printf("Enter Home Location: ");
     scanf("%s", users[userCount].location);
+    printf("Enter Work Location: ");
+    scanf("%s", users[userCount].location_work);
 
     saveUserToFile();
     userCount++;
@@ -1188,7 +1192,16 @@ void userMenu()
             //printf("Displaying forecast for your location...\n");
             printf("\033[0m");
             delay(1);
+            clearScreen();
+            printf("\033[1;33m");
+            printf("Forecast For Home\n\n");
+            printf("\033[0m");
             showForecast(users[loggedInUserIndex].location); // Using last registered user for simplicity
+            printf("\n\n");
+            printf("\033[1;33m");
+            printf("Forecast For Work Place\n\n");
+            printf("\033[0m");
+            showForecast(users[loggedInUserIndex].location_work);
             break;
         case 2:
             clearScreen();
