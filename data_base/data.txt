@@ -1,4 +1,5 @@
-x 80.00 40.00
-borishal 6.00 32.00
-pabna 9.00 32.00
-khulna 9.00 27.00
+Khulna 6.00 32.00
+Ctg 9.00 32.00
+Pabna 9.00 27.00
+sirajgonj 2.00 27.00
+Mirpur 9.00 32.00

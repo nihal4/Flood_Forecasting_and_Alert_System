@@ -1329,6 +1329,16 @@ int main()
     loadUsersFromFile();
 
     clearScreen();
+    printf("\033[1;33m"); // Green color for the title
+    printf("********************************************\n");
+    printf("**   Flood Forecasting and Alert System   **\n");
+    printf("********************************************\n");
+    printf("\n");
+    loadingDotsAnimation(2, "Booting");
+    printf("\033[0m"); // Reset color
+
+    //loadingDotsAnimation(2, "...");
+    clearScreen();
     loginPage();
 
     return 0;
